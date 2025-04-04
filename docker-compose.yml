@@ -49,6 +49,9 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+        # limits:
+        #   cpus: '4'
+        #   memory: 8G
     restart: always
     environment:
       - MODEL_PATH=/models/mistral-7b-instruct.gguf
@@ -73,6 +76,11 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     restart: always
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 2G
 
   # Сервис для индексации документов (запускается периодически)
   indexer:
