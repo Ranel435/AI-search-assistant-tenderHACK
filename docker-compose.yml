@@ -1,0 +1,90 @@
+services:
+  # Nginx как основной маршрутизатор запросов
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS (если нужно)
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro  # Сертификаты, если используются
+    depends_on:
+      - frontend
+      - backend
+    restart: always
+
+  # Фронтенд-приложение
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: always
+
+  # Бэкенд API
+  backend:
+    build: ./backend
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - LLM_SERVICE_URL=http://llm_service:8000
+      - VECTOR_DB_URL=http://vector_db:6333
+    restart: always
+    depends_on:
+      - postgres
+      - llm_service
+      - vector_db
+
+  # LLM сервис
+  llm_service:
+    build: ./llm_service
+    volumes:
+      - ./llm_service/models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: always
+    environment:
+      - MODEL_PATH=/models/mistral-7b-instruct.gguf
+      - QUANTIZATION=q4_k_m
+      - CONTEXT_SIZE=8192
+
+  # Векторная база данных (Qdrant)
+  vector_db:
+    image: qdrant/qdrant:latest
+    volumes:
+      - vector_data:/qdrant/storage
+    restart: always
+
+  # База данных PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    restart: always
+
+  # Сервис для индексации документов (запускается периодически)
+  indexer:
+    build: ./backend
+    command: ["go", "run", "cmd/indexer/main.go"]
+    volumes:
+      - ./knowledge_base:/knowledge_base
+    depends_on:
+      - vector_db
+      - llm_service
+    restart: "no"  # Запускается вручную или по расписанию
+
+volumes:
+  postgres_data:
+  vector_data:
