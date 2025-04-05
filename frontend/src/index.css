@@ -1,0 +1,37 @@
+:root {
+  --light-blue-for-lines: #D4DBE6;
+  --grey: #7F8792;
+  --blue: #264B82;
+}
+
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  font-display: swap;
+  src: url("assets/fonts/OpenSans/OpenSans-Regular.ttf");
+}
+
+.f16 {
+  font-family: "OpenSans";
+  font-size: 16px;
+}
+
+.f24 {
+  font-family: "OpenSans";
+  font-size: 20px;
+}
+
+.f30 {
+  font-family: "OpenSans";
+  font-size: 30px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+}
