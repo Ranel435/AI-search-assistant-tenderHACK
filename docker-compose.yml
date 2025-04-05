@@ -11,6 +11,7 @@ services:
     depends_on:
       - frontend
       - backend
+      - llm_service
     restart: always
 
   # Frontend
@@ -38,34 +39,15 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DB_SSLMODE=${DB_SSLMODE}
-      - LLM_SERVICE_URL=http://llm_service:8000
+      - LLM_SERVICE_URL=${LLM_SERVICE_URL}
+      - LLM_TIMEOUT=60  # Увеличьте таймаут для длинных запросов
+      - LLM_MAX_TOKENS=1024
     depends_on:
       - postgres
-      # - llm_service
+      - llm_service
     restart: always
     volumes:
       - ./data:/app/data
-
-  # LLM сервис
-  # llm_service:
-  #   image: ollama/ollama:latest
-  #   ports:
-  #     - "8000:8000"
-  #     - "11434:11434"
-  #   volumes:
-  #     - ollama_data:/root/.ollama
-  #   restart: always
-  #   # Или используйте альтернативный сервис с моделью на выбор:
-  #   # image: ghcr.io/huggingface/text-generation-inference:latest
-  #   # environment:
-  #   #   - MODEL_ID=mistralai/Mistral-7B-Instruct-v0.2
-
-  # Векторная база данных (Qdrant)
-  # vector_db:
-  #   image: qdrant/qdrant:latest
-  #   volumes:
-  #     - vector_data:/qdrant/storage
-  #   restart: always
 
   # База данных PostgreSQL
   postgres:
@@ -80,24 +62,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/migrations:/docker-entrypoint-initdb.d
     restart: always
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '2'
-    #       memory: 2G
 
-  # Сервис для индексации документов (запускается периодически)
-  # indexer:
-  #   build: ./backend
-  #   command: ["go", "run", "cmd/indexer/main.go"]
-  #   volumes:
-  #     - ./knowledge_base:/knowledge_base
-  #   depends_on:
-  #     - vector_db
-  #     - llm_service
-  #   restart: "no"  # Запускается вручную или по расписанию
+  llm_service:
+    build: ./llm_services
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./llm_services:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
 
 volumes:
   postgres_data:
-  vector_data:
-  ollama_data:
+

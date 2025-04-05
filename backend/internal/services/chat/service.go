@@ -3,6 +3,7 @@ package chat
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"backend/internal/db/models"
 	"backend/internal/db/postgres"
@@ -80,7 +81,7 @@ func (s *Service) SendMessage(ctx context.Context, req ChatRequest) (*ChatRespon
 		return nil, fmt.Errorf("failed to search for documents: %w", err)
 	}
 
-	// Готовим контекст для LLM
+	// Подготовка контекста для LLM с релевантными документами
 	context := s.searchService.PrepareContext(docs)
 
 	// Получаем источники
@@ -89,6 +90,8 @@ func (s *Service) SendMessage(ctx context.Context, req ChatRequest) (*ChatRespon
 	// Генерируем ответ с помощью LLM
 	answer, err := s.llmService.GenerateAnswer(ctx, req.Message, context)
 	if err != nil {
+		// Логирование ошибки
+		log.Printf("LLM Error: %v", err)
 		// Если произошла ошибка, отправляем заготовленный ответ
 		answer = "Извините, я не смог обработать ваш запрос. Пожалуйста, попробуйте переформулировать вопрос или обратитесь в службу поддержки."
 	}
