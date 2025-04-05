@@ -1,5 +1,5 @@
 services:
-  # Nginx как основной маршрутизатор запросов
+  # Nginx
   nginx:
     image: nginx:alpine
     ports:
@@ -9,23 +9,24 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro  # Сертификаты
     depends_on:
-      # - frontend
+      - frontend
       - backend
     restart: always
 
-  # # Фронтенд-приложение
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - "3000:80"  # В production через Nginx
-  #   volumes:
-  #     - ./frontend/dist:/usr/share/nginx/html:ro
-  #     - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-  #   restart: always
-  #   depends_on:
-  #     - backend
+  # Frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8080/api
+    depends_on:
+      - backend
 
-  # Бэкенд API
+  # Backend
   backend:
     build: ./backend
     ports:
