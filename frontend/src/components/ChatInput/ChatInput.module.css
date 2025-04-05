@@ -4,7 +4,7 @@
   gap: 8px;
   padding: 10px;
   background: #fff;
-  width: 60%;
+  width: 100%;
 }
 
 .chatInput__input {
@@ -16,7 +16,7 @@
 
 .chatInput__button {
   background-color: #fff;
-  color: var(--grey);
+  color: var(--blue);
   padding: 15px;
   border: 2px solid var(--light-blue-for-lines);
   outline: none;
