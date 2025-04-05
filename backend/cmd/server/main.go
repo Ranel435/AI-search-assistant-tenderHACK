@@ -1,3 +1,7 @@
+// @title        Tender Chat API
+// @version      1.0
+// @description  API для чат-бота с контекстным поиском
+// @BasePath     /api
 package main
 
 import (

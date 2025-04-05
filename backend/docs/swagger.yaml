@@ -1,0 +1,253 @@
+basePath: /api
+definitions:
+  chat.ChatRequest:
+    properties:
+      chat_id:
+        type: integer
+      message:
+        type: string
+      user_id:
+        type: string
+    type: object
+  chat.ChatResponse:
+    properties:
+      chat_id:
+        type: integer
+      message:
+        type: string
+      sources:
+        items:
+          type: string
+        type: array
+    type: object
+  chat.FeedbackRequest:
+    properties:
+      comment:
+        type: string
+      message_id:
+        type: integer
+      rating:
+        type: integer
+    type: object
+  models.ChatSummary:
+    properties:
+      average_rating:
+        type: number
+      category:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      message_count:
+        type: integer
+      summary:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.Message:
+    properties:
+      chat_id:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      role:
+        description: user или assistant
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API для чат-бота с контекстным поиском
+  title: Tender Chat API
+  version: "1.0"
+paths:
+  /chat:
+    post:
+      consumes:
+      - application/json
+      description: Отправляет сообщение и получает ответ от ассистента
+      parameters:
+      - description: Сообщение пользователя
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ChatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/chat.ChatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Отправка сообщения
+      tags:
+      - chat
+  /chat/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получает информацию о чате по его ID
+      parameters:
+      - description: ID чата
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Message'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получение информации о чате
+      tags:
+      - chat
+  /chat/{id}/messages:
+    get:
+      consumes:
+      - application/json
+      description: Получает историю сообщений чата по его ID
+      parameters:
+      - description: ID чата
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Message'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получение сообщений чата
+      tags:
+      - chat
+  /chats:
+    get:
+      consumes:
+      - application/json
+      description: Получает список чатов пользователя с пагинацией
+      parameters:
+      - description: ID пользователя (если не указан, используется demo_user)
+        in: query
+        name: user_id
+        type: string
+      - description: Лимит результатов (по умолчанию 10)
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение (по умолчанию 0)
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.ChatSummary'
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Список чатов пользователя
+      tags:
+      - chat
+  /feedback:
+    post:
+      consumes:
+      - application/json
+      description: Сохраняет оценку и комментарий пользователя по сообщению
+      parameters:
+      - description: Данные обратной связи
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/chat.FeedbackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Сохранение обратной связи
+      tags:
+      - feedback
+swagger: "2.0"

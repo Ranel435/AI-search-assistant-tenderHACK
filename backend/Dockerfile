@@ -9,8 +9,17 @@ RUN go mod download
 # Копирование исходного кода
 COPY . .
 
-# Компиляция
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
+# Установка Swag
+RUN go install github.com/swaggo/swag/cmd/swag@v1.16.1
+
+# Отключить Go proxy из-за проблем с сетью
+ENV GOPROXY=direct
+
+# Генерация Swagger документации
+RUN swag init -g cmd/server/main.go
+
+# Сборка приложения
+RUN go build -o app cmd/server/main.go
 
 # Финальный образ
 FROM alpine:latest
@@ -20,9 +29,10 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 # Копирование бинарника из предыдущего шага
-COPY --from=build /app/main .
+COPY --from=build /app/app .
 COPY --from=build /app/migrations ./migrations
+COPY --from=build /app/docs ./docs
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["./app"]

@@ -9,7 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// HandleSendMessage обрабатывает отправку сообщения
+// HandleSendMessage godoc
+// @Summary Отправка сообщения
+// @Description Отправляет сообщение и получает ответ от ассистента
+// @Tags chat
+// @Accept json
+// @Produce json
+// @Param request body chat.ChatRequest true "Сообщение пользователя"
+// @Success 200 {object} chat.ChatResponse
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /chat [post]
 func HandleSendMessage(chatService *chat.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req chat.ChatRequest
@@ -38,7 +48,17 @@ func HandleSendMessage(chatService *chat.Service) gin.HandlerFunc {
 	}
 }
 
-// HandleGetChat получает информацию о чате
+// HandleGetChat godoc
+// @Summary Получение информации о чате
+// @Description Получает информацию о чате по его ID
+// @Tags chat
+// @Accept json
+// @Produce json
+// @Param id path int true "ID чата"
+// @Success 200 {object} map[string][]models.Message
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /chat/{id} [get]
 func HandleGetChat(chatService *chat.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		chatID, err := strconv.ParseInt(c.Param("id"), 10, 64)
@@ -57,7 +77,17 @@ func HandleGetChat(chatService *chat.Service) gin.HandlerFunc {
 	}
 }
 
-// HandleGetChatMessages получает сообщения чата
+// HandleGetChatMessages godoc
+// @Summary Получение сообщений чата
+// @Description Получает историю сообщений чата по его ID
+// @Tags chat
+// @Accept json
+// @Produce json
+// @Param id path int true "ID чата"
+// @Success 200 {object} map[string][]models.Message
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /chat/{id}/messages [get]
 func HandleGetChatMessages(chatService *chat.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		chatID, err := strconv.ParseInt(c.Param("id"), 10, 64)
@@ -76,7 +106,18 @@ func HandleGetChatMessages(chatService *chat.Service) gin.HandlerFunc {
 	}
 }
 
-// HandleListChats получает список чатов пользователя
+// HandleListChats godoc
+// @Summary Список чатов пользователя
+// @Description Получает список чатов пользователя с пагинацией
+// @Tags chat
+// @Accept json
+// @Produce json
+// @Param user_id query string false "ID пользователя (если не указан, используется demo_user)"
+// @Param limit query int false "Лимит результатов (по умолчанию 10)"
+// @Param offset query int false "Смещение (по умолчанию 0)"
+// @Success 200 {object} map[string][]models.ChatSummary
+// @Failure 500 {object} map[string]string
+// @Router /chats [get]
 func HandleListChats(chatService *chat.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID := c.Query("user_id")
@@ -97,7 +138,17 @@ func HandleListChats(chatService *chat.Service) gin.HandlerFunc {
 	}
 }
 
-// HandleSaveFeedback сохраняет обратную связь пользователя
+// HandleSaveFeedback godoc
+// @Summary Сохранение обратной связи
+// @Description Сохраняет оценку и комментарий пользователя по сообщению
+// @Tags feedback
+// @Accept json
+// @Produce json
+// @Param request body chat.FeedbackRequest true "Данные обратной связи"
+// @Success 200 {object} map[string]bool
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /feedback [post]
 func HandleSaveFeedback(chatService *chat.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req chat.FeedbackRequest
