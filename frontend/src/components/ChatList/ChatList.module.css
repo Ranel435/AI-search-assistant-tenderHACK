@@ -1,0 +1,50 @@
+.chatList {
+  width: 264px;
+  height: 100vh;
+  border: 1px solid var(--light-blue-for-lines);
+
+}
+
+.chatList__container {
+  border-top: 1px solid var(--light-blue-for-lines);
+  margin-top: 80px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.newChatBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  gap: 10px;
+  color: var(--blue);
+  font-weight: 700;
+  background-color: #fff;
+  border: 1px solid var(--light-blue-for-lines)
+}
+
+ul {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+li {
+  padding: 15px;
+  cursor: pointer;
+}
+
+.active {
+  background: var(--light-blue-for-lines);
+  border-left: 2px solid var(--blue);
+}
+
+.chatName {
+  color: var(--blue);
+}

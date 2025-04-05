@@ -1,0 +1,34 @@
+.messageContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.userContainer {
+  justify-content: flex-end;
+}
+
+.botContainer {
+  justify-content: flex-start;
+}
+
+.messageAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.userMessage, .botMessage {
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 70%;
+}
+
+.userMessage {
+  background-color: #dcf8c6;
+}
+
+.botMessage {
+  background-color: #f1f1f1;
+}

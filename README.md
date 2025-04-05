@@ -1,1 +1,1 @@
-# AI-search--assistant-tenderHACK
+# AI-search-assistant-tenderHACK
