@@ -1,0 +1,146 @@
+/* .window {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.message__img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.userMessage {
+
+  background-color: #dcf8c6;
+  align-self: flex-end;
+
+}
+
+.botMessage {
+  background-color: #f1f1f1;
+  align-self: flex-start;
+}
+
+.messageContent {
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 70%;
+}
+
+.nonactive {
+  display: none;
+}
+
+.nomessages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.noMessages__title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+ */
+
+
+
+ .window {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 150px);
+  border-radius: 10px;
+}
+
+.message {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 12px;
+  max-width: 75%;
+  word-break: break-word; /* Разрыв слов, если нет пробела */
+}
+
+.messageContent {
+  font-size: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;  /* Перенос слов по необходимости */
+  overflow-wrap: break-word; /* Перенос слов при длинных фразах */
+  white-space: pre-wrap; /* Сохранение отступов и переносов строк */
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.userMessage {
+  background-color: var(--light-blue-for-lines);
+  align-self: flex-end;
+  padding: 10px 14px;
+}
+
+.botMessage {
+  background-color: #fff;
+  align-self: flex-start;
+  padding: 10px 14px;
+}
+
+.nomessages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.noMessages__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.noMessages__subtitle {
+  font-size: 16px;
+  color: #777;
+  margin-top: 5px;
+}
+
+/* Скролл-бар */
+.window::-webkit-scrollbar {
+  width: 8px;
+}
+
+.window::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.window::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.nonactive {
+  display: none;
+}
+
+.message__feedback {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}

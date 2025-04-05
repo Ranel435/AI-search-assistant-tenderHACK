@@ -1,0 +1,25 @@
+.chatInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #fff;
+  width: 60%;
+}
+
+.chatInput__input {
+  flex-grow: 1;
+  padding: 15px;
+  border: 2px solid var(--light-blue-for-lines);
+  outline: none;
+}
+
+.chatInput__button {
+  background-color: #fff;
+  color: var(--grey);
+  padding: 15px;
+  border: 2px solid var(--light-blue-for-lines);
+  outline: none;
+}
+
+
