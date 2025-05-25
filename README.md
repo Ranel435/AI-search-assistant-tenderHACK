@@ -8,6 +8,8 @@
 - Филатов Артур ML
 - Крылов Александр ML
 
+## ⚙️ Презентация
+- https://drive.google.com/file/d/1i3TCish8pSQuL2XMKTIhXJJnm6C0YYZO/view?usp=sharing
 
 ## ⚙️ Стек технологий
 
